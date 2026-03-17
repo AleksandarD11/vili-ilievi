@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --background: 7 17 13;
+  --foreground: 245 239 229;
+  --muted: 186 174 156;
+  --border: 255 255 255;
+}
+
+.light {
+  color-scheme: light;
+  --background: 245 241 235;
+  --foreground: 22 33 28;
+  --muted: 82 96 88;
+  --border: 19 41 31;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-[rgb(var(--background))] text-[rgb(var(--foreground))] font-sans antialiased;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at top, rgba(138, 199, 181, 0.16), transparent 22%),
+    linear-gradient(180deg, rgba(11, 23, 18, 1) 0%, rgba(7, 17, 13, 1) 100%);
+}
+
+body.light {
+  background-image:
+    radial-gradient(circle at top, rgba(61, 123, 97, 0.15), transparent 24%),
+    linear-gradient(180deg, rgba(248, 245, 239, 1) 0%, rgba(238, 232, 221, 1) 100%);
+}
+
+* {
+  border-color: rgba(var(--border), 0.12);
+}
+
+::selection {
+  background: rgba(215, 176, 110, 0.28);
+  color: rgb(var(--foreground));
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(215, 176, 110, 0.85), rgba(61, 123, 97, 0.8));
+  border-radius: 999px;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display tracking-[0.02em];
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply border border-white/10 bg-white/10 backdrop-blur-xl shadow-glow;
+  }
+
+  .section-shell {
+    @apply relative overflow-hidden py-20 md:py-28;
+  }
+
+  .section-label {
+    @apply mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.3em] text-stone-100/70;
+  }
+
+  .cta-ring {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .cta-ring::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(120deg, rgba(215, 176, 110, 0.92), rgba(138, 199, 181, 0.8), rgba(215, 176, 110, 0.92));
+    background-size: 200% 100%;
+    animation: shimmer 4s linear infinite;
+  }
+}
+
+.text-balance {
+  text-wrap: balance;
+}
