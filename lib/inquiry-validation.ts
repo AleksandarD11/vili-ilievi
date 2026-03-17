@@ -26,6 +26,16 @@ export type InquiryStatusUpdatePayload = {
   checkOut: string;
 };
 
+type InquiryValidationResult =
+  | {
+      success: false;
+      error: string;
+    }
+  | {
+      success: true;
+      data: InquirySubmissionPayload;
+    };
+
 const emailRegex = new RegExp(EMAIL_PATTERN);
 const phoneRegex = new RegExp(BULGARIAN_PHONE_PATTERN);
 const fakeMarkers = [
@@ -64,7 +74,9 @@ function looksFake(value: string) {
   return false;
 }
 
-export function validateInquiryPayload(payload: InquirySubmissionPayload) {
+export function validateInquiryPayload(
+  payload: InquirySubmissionPayload,
+): InquiryValidationResult {
   const firstName = normalizeText(payload.firstName);
   const lastName = normalizeText(payload.lastName);
   const email = normalizeText(payload.email);
@@ -76,39 +88,39 @@ export function validateInquiryPayload(payload: InquirySubmissionPayload) {
   const guests = Number(payload.guests);
 
   if (!firstName || !lastName || !email || !phone || !houseId || !checkIn || !checkOut) {
-    return { valid: false, error: "All required fields must be completed." };
+    return { success: false, error: "All required fields must be completed." };
   }
 
   if (firstName.length < 2 || lastName.length < 2 || looksFake(firstName) || looksFake(lastName)) {
-    return { valid: false, error: "Please enter a valid full name." };
+    return { success: false, error: "Please enter a valid full name." };
   }
 
   if (!emailRegex.test(email) || looksFake(email)) {
-    return { valid: false, error: "Please enter a valid email address." };
+    return { success: false, error: "Please enter a valid email address." };
   }
 
   if (!phoneRegex.test(phone) || looksFake(phone)) {
-    return { valid: false, error: "Please enter a valid Bulgarian phone number." };
+    return { success: false, error: "Please enter a valid Bulgarian phone number." };
   }
 
   if (!Number.isInteger(guests) || guests < 1 || guests > 15) {
-    return { valid: false, error: "Guests must be between 1 and 15." };
+    return { success: false, error: "Guests must be between 1 and 15." };
   }
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(checkIn) || !/^\d{4}-\d{2}-\d{2}$/.test(checkOut)) {
-    return { valid: false, error: "Please select valid check-in and check-out dates." };
+    return { success: false, error: "Please select valid check-in and check-out dates." };
   }
 
   if (checkOut < checkIn) {
-    return { valid: false, error: "Check-out must be after check-in." };
+    return { success: false, error: "Check-out must be after check-in." };
   }
 
   if (message && looksFake(message)) {
-    return { valid: false, error: "Please remove placeholder or fake text from the notes field." };
+    return { success: false, error: "Please remove placeholder or fake text from the notes field." };
   }
 
   return {
-    valid: true,
+    success: true,
     data: {
       firstName,
       lastName,

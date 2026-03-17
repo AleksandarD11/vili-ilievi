@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     message: typeof body.message === "string" ? body.message : "",
   });
 
-  if (!validation.valid) {
+  if (validation.success !== true) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
 
